@@ -1,0 +1,27 @@
+.alert {
+  margin: 8px;
+  padding: 12px 16px;
+  border-radius: 4;
+  background-color: gray;
+  color: white;
+}
+
+.info {
+  background-color: lightblue;
+}
+
+.danger {
+  background-color: pink;
+}
+
+.success {
+  background-color: lightgreen;
+}
+
+.is-outlined {
+  border: 1px solid black;
+}
+
+.is-elevated {
+  box-shadow: 10px 10px 16px 0px rgba(0, 0, 0, 0.39);
+}
