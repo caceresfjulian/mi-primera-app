@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Mi Primera App - GoIT 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Este proyecto fue creado utilizando [Create React App](https://github.com/facebook/create-react-app). A continuación, la descripción original de cada uno de los scripts incluidos con CRA. 
 
 ## Available Scripts
 
