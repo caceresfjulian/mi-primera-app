@@ -1,81 +1,42 @@
-// import Alert from "./components/Alert";
-// import Counter from "./components/Counter";
-// import Form from "./components/Form";
 import { Component } from "react";
-import ErrorBoundary from "./components/ErrorBoundary";
-import LifeCycleComp from "./components/LifeCycleComp";
+import ArticleList from "./components/ArticleList";
+import { getArticles } from "./services/articles";
 
 class App extends Component {
   state = {
-    players: [
-      { name: "Maria", score: 10 },
-      { name: "Andrea", score: 4 },
-      { name: "Phillip", score: 12 },
-      { name: "Will", score: 8 },
-      { name: "Robinson", score: 3 },
-    ],
-    isGameOpen: false,
+    articles: [],
+    loading: false,
+    error: null,
   };
 
-  handleScoreUpdate = (operation, playerIndex) => {
-    return () => {
-      this.setState((prevState) => {
-        const updatedList = [...prevState.players];
-        updatedList[playerIndex] = {
-          ...prevState.players[playerIndex],
-          score:
-            operation === "add"
-              ? prevState.players[playerIndex].score + 1
-              : prevState.players[playerIndex].score - 1,
-        };
-        return { players: updatedList };
+  async componentDidMount() {
+    try {
+      this.setState({ loading: true });
+      const articles = await getArticles();
+      this.setState({ articles });
+    } catch (error) {
+      this.setState({
+        error,
       });
-    };
+    } finally {
+      this.setState({ loading: false });
+    }
+  }
+
+  validateArticles = ({ loading, articles, error }) => {
+    if (loading) {
+      return <h1>Loading</h1>;
+    } else if (articles.length > 0) {
+      return <ArticleList articles={articles} />;
+    } else if (error) {
+      return <h1>Try later</h1>;
+    }
+    return <h1>The list is empty</h1>;
   };
 
   render() {
-    const { players, isGameOpen } = this.state;
-    return (
-      <div style={styles}>
-        {isGameOpen &&
-          players.map((player, index) => (
-            <label
-              key={index}
-              style={{
-                width: "350px",
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr 1fr",
-              }}
-            >
-              <span>{player.name}</span>
-              <button onClick={this.handleScoreUpdate("substract", index)}>
-                -
-              </button>
-              <span style={{ textAlign: "center" }}>{player.score}</span>
-              <button onClick={this.handleScoreUpdate("add", index)}>+</button>
-            </label>
-          ))}
-        <ErrorBoundary>
-          {isGameOpen && <LifeCycleComp players={players} />}
-        </ErrorBoundary>
-        <button
-          onClick={() =>
-            this.setState((prevState) => ({
-              isGameOpen: !prevState.isGameOpen,
-            }))
-          }
-        >{`${isGameOpen ? "End" : "Start"} game`}</button>
-      </div>
-    );
+    return this.validateArticles(this.state);
   }
 }
-
-const styles = {
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
-  alignItems: "center",
-  height: "100vh",
-};
 
 export default App;
