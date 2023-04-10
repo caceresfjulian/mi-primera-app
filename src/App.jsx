@@ -1,42 +1,64 @@
-import { Component } from "react";
-import ArticleList from "./components/ArticleList";
-import { getArticles } from "./services/articles";
+import { useEffect, useState } from "react";
 
-class App extends Component {
-  state = {
-    articles: [],
-    loading: false,
-    error: null,
+const fetchBooks = ({ genre }) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      if (genre === "drama") {
+        console.log("Resolved");
+        resolve(["Drama 1", "Drama 2", "Drama 3", "Drama 4", "Drama 5"]);
+      } else if (genre === "horror") {
+        resolve(["Horror 1", "Horror 2", "Horror 3", "Horror 4", "Horror 5"]);
+      }
+    }, 1000);
+  });
+};
+
+const BookList = () => {
+  const [books, setBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      const data = await fetchBooks({ genre: "drama" });
+      setBooks(data);
+      setIsLoading(false);
+    };
+    fetchData();
+  }, []);
+
+  return (
+    <li>
+      {isLoading && <span>LOADING...</span>}
+      {!isLoading && books.map((book) => <span key={book}>{book}</span>)}
+    </li>
+  );
+};
+
+const App = () => {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    setLoggedIn((l) => !l);
   };
 
-  async componentDidMount() {
-    try {
-      this.setState({ loading: true });
-      const articles = await getArticles();
-      this.setState({ articles });
-    } catch (error) {
-      this.setState({
-        error,
-      });
-    } finally {
-      this.setState({ loading: false });
-    }
-  }
+  useEffect(() => {
+    console.log("MOUNT");
+  }, []);
 
-  validateArticles = ({ loading, articles, error }) => {
-    if (loading) {
-      return <h1>Loading</h1>;
-    } else if (articles.length > 0) {
-      return <ArticleList articles={articles} />;
-    } else if (error) {
-      return <h1>Try later</h1>;
-    }
-    return <h1>The list is empty</h1>;
-  };
-
-  render() {
-    return this.validateArticles(this.state);
-  }
-}
+  return (
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        height: "100vh",
+      }}
+    >
+      <button onClick={handleLogin}>Login</button>
+      {isLoggedIn && <BookList />}
+    </div>
+  );
+};
 
 export default App;
