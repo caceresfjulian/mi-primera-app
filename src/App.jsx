@@ -1,50 +1,18 @@
-import { useEffect, useState } from "react";
-
-const fetchBooks = ({ genre }) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (genre === "drama") {
-        console.log("Resolved");
-        resolve(["Drama 1", "Drama 2", "Drama 3", "Drama 4", "Drama 5"]);
-      } else if (genre === "horror") {
-        resolve(["Horror 1", "Horror 2", "Horror 3", "Horror 4", "Horror 5"]);
-      }
-    }, 1000);
-  });
-};
-
-const BookList = () => {
-  const [books, setBooks] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const data = await fetchBooks({ genre: "drama" });
-      setBooks(data);
-      setIsLoading(false);
-    };
-    fetchData();
-  }, []);
-
-  return (
-    <li>
-      {isLoading && <span>LOADING...</span>}
-      {!isLoading && books.map((book) => <span key={book}>{book}</span>)}
-    </li>
-  );
-};
+import { useState, useMemo } from "react";
 
 const App = () => {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [count, setCount] = useState(0);
+  const [showMessage, setShowMessage] = useState(false);
 
-  const handleLogin = () => {
-    setLoggedIn((l) => !l);
+  const fibonacci = (num) => {
+    if (num < 2) {
+      return num;
+    }
+
+    return fibonacci(num - 1) + fibonacci(num - 2);
   };
 
-  useEffect(() => {
-    console.log("MOUNT");
-  }, []);
+  const fibonacciNum = useMemo(() => fibonacci(count), [count]);
 
   return (
     <div
@@ -55,8 +23,10 @@ const App = () => {
         height: "100vh",
       }}
     >
-      <button onClick={handleLogin}>Login</button>
-      {isLoggedIn && <BookList />}
+      <h2>{fibonacciNum}</h2>
+      {showMessage && <span>Showing message</span>}
+      <button onClick={() => setCount((c) => c + 1)}>+</button>
+      <button onClick={() => setShowMessage((s) => !s)}>Toggle</button>
     </div>
   );
 };
