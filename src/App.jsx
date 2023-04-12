@@ -1,33 +1,21 @@
-import { useState, useMemo } from "react";
+import { Route, Routes } from "react-router-dom";
+import SharedLayout from "./components/SharedLayout";
+import Form from "./components/Form";
+import Home from "./components/Home";
+import CarDetail from "./components/CarDetail";
 
 const App = () => {
-  const [count, setCount] = useState(0);
-  const [showMessage, setShowMessage] = useState(false);
-
-  const fibonacci = (num) => {
-    if (num < 2) {
-      return num;
-    }
-
-    return fibonacci(num - 1) + fibonacci(num - 2);
-  };
-
-  const fibonacciNum = useMemo(() => fibonacci(count), [count]);
-
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        height: "100vh",
-      }}
-    >
-      <h2>{fibonacciNum}</h2>
-      {showMessage && <span>Showing message</span>}
-      <button onClick={() => setCount((c) => c + 1)}>+</button>
-      <button onClick={() => setShowMessage((s) => !s)}>Toggle</button>
-    </div>
+    <Routes>
+      <Route path="/" element={<SharedLayout />}>
+        <Route index element={<Home />} />
+        <Route path="/class-components" element={<Form />} />
+        <Route path="/team" element={<h1>Team</h1>} />
+        <Route path="/cars" element={<h1>Cars</h1>} />
+        <Route path="/cars/:carId" element={<CarDetail />} />
+        <Route path="*" element={<h1>Not found</h1>} />
+      </Route>
+    </Routes>
   );
 };
 

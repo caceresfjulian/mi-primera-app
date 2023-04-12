@@ -3,6 +3,7 @@
 body {
   font-family: sans-serif;
   line-height: 1.5;
+  margin: 0;
 }
 
 h1,
@@ -25,4 +26,18 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
+}
+
+a,
+a:visited {
+  text-decoration: none;
+  color: unset;
+}
+
+a.active {
+  color: greenyellow;
+}
+
+li {
+  list-style-type: none;
 }
